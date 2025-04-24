@@ -1,6 +1,8 @@
 package org.mhh.service;
 
+import org.mhh.dto.WeatherResponseDTO;
+
 public interface WeatherService {
-    Object getWeatherData(String city);
+    WeatherResponseDTO getWeatherData(String city);
 
 }
