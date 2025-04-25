@@ -1,5 +1,6 @@
 package org.mhh.controller;
 
+import org.mhh.dto.WeatherResponseDTO;
 import org.mhh.service.WeatherService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,13 +24,14 @@ public class WeatherController {
         System.out.println("Received request for city: " + city);
 
         if (city == null || city.trim().isEmpty()) {
-            return ResponseEntity.badRequest().body("City parameter cannot be empty.");
-        }
-        Object weatherData = weatherService.getWeatherData(city);
-        if (weatherData == null) {
-            return ResponseEntity.status(503).body("Could not retrieve weather data at the moment.");
+            return ResponseEntity.badRequest().body("{\"error\": \"City parameter cannot be empty.\"}");
         }
 
+        WeatherResponseDTO weatherData = weatherService.getWeatherData(city);
+
+        if (weatherData == null) {
+            return ResponseEntity.status(503).body("{\"error\": \"Could not retrieve weather data at the moment. Check if the city name is correct or try again later.\"}"); // پیام بهتر
+        }
         return ResponseEntity.ok(weatherData);
     }
 }
