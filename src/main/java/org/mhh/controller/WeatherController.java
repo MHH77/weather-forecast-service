@@ -22,12 +22,8 @@ public class WeatherController {
     }
 
     @GetMapping
-    // نوع بازگشتی رو به DTO مشخص می‌کنیم
     public ResponseEntity<WeatherResponseDTO> getWeatherForecast(@RequestParam String city) {
-        // ۱. نیازی به چک کردن city خالی نیست، InvalidInputException توسط سرویس throw می‌شه
-        // ۲. نیازی به چک کردن null بودن نتیجه نیست، Exception ها توسط GlobalExceptionHandler گرفته می‌شن
-
-        log.info("Received request for city: {}", city);        // فقط سرویس رو صدا می‌زنیم
-        WeatherResponseDTO weatherData = weatherService.getWeatherData(city);        // اگه به اینجا برسیم یعنی همه چی موفقیت آمیز بوده
+        log.info("Received request for city: {}", city);
+        WeatherResponseDTO weatherData = weatherService.getWeatherData(city);
         return ResponseEntity.ok(weatherData);    }
 }
