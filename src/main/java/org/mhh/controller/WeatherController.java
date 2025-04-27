@@ -2,6 +2,8 @@ package org.mhh.controller;
 
 import org.mhh.dto.WeatherResponseDTO;
 import org.mhh.service.WeatherService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/weather")
 public class WeatherController {
 
+    private static final Logger log = LoggerFactory.getLogger(WeatherController.class); // لاگر برای کنترلر
     private final WeatherService weatherService;
 
     public WeatherController(WeatherService weatherService) {
@@ -19,19 +22,12 @@ public class WeatherController {
     }
 
     @GetMapping
-    public ResponseEntity<?> getWeatherForecast(@RequestParam String city) {
+    // نوع بازگشتی رو به DTO مشخص می‌کنیم
+    public ResponseEntity<WeatherResponseDTO> getWeatherForecast(@RequestParam String city) {
+        // ۱. نیازی به چک کردن city خالی نیست، InvalidInputException توسط سرویس throw می‌شه
+        // ۲. نیازی به چک کردن null بودن نتیجه نیست، Exception ها توسط GlobalExceptionHandler گرفته می‌شن
 
-        System.out.println("Received request for city: " + city);
-
-        if (city == null || city.trim().isEmpty()) {
-            return ResponseEntity.badRequest().body("{\"error\": \"City parameter cannot be empty.\"}");
-        }
-
-        WeatherResponseDTO weatherData = weatherService.getWeatherData(city);
-
-        if (weatherData == null) {
-            return ResponseEntity.status(503).body("{\"error\": \"Could not retrieve weather data at the moment. Check if the city name is correct or try again later.\"}"); // پیام بهتر
-        }
-        return ResponseEntity.ok(weatherData);
-    }
+        log.info("Received request for city: {}", city);        // فقط سرویس رو صدا می‌زنیم
+        WeatherResponseDTO weatherData = weatherService.getWeatherData(city);        // اگه به اینجا برسیم یعنی همه چی موفقیت آمیز بوده
+        return ResponseEntity.ok(weatherData);    }
 }
