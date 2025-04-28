@@ -45,7 +45,19 @@
             <version>2.x.x</version> <!-\- Check latest version -\->
         </dependency>
         -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-cache</artifactId>
+        </dependency>
 
+        <!-- (اختیاری ولی خوب) یک پیاده‌سازی مشخص برای کش -->
+        <!-- اگه اینو اضافه نکنیم، Spring از یه ConcurrentMap ساده استفاده می‌کنه -->
+        <!-- می‌تونیم از EhCache، Caffeine، Redis و ... استفاده کنیم. Caffeine انتخاب خوبیه -->
+        <dependency>
+            <groupId>com.github.ben-manes.caffeine</groupId>
+            <artifactId>caffeine</artifactId>
+            <!-- نسخه رو معمولاً Spring Boot مدیریت می‌کنه، اگه نکرد آخرین نسخه سازگار رو بذار -->
+        </dependency>
     </dependencies>
 
     <build>
