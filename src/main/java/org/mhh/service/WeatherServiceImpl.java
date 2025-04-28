@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
@@ -38,13 +39,16 @@ public class WeatherServiceImpl implements WeatherService {
     }
 
     @Override
+    @Cacheable(value = "weatherCache", key = "#city.toLowerCase()")
     public WeatherResponseDTO getWeatherData(String city) {
+        log.info(">>> Fetching weather data for city: {} (Cache MISS or expired)", city);
+
         if (city == null || city.trim().isEmpty()) {
             throw new InvalidInputException("City name cannot be empty.");
         }
 
         String url = buildUrl(city);
-        log.info("Requesting URL: {}", url);
+        log.debug("Requesting URL: {}", url);
 
         try {
             String jsonResponse = restTemplate.getForObject(url, String.class);
@@ -52,10 +56,9 @@ public class WeatherServiceImpl implements WeatherService {
             return mapJsonToDto(jsonResponse, city);
 
         } catch (HttpClientErrorException e) {
+            log.error("HTTP Error calling OpenWeatherMap API for city {}: {} - {}", city, e.getStatusCode(), e.getResponseBodyAsString(), e);
             if (e.getStatusCode() == HttpStatus.NOT_FOUND) {
                 throw new CityNotFoundException(city, e);
-            } else if (e.getStatusCode() == HttpStatus.UNAUTHORIZED) {
-                throw new ExternalApiException("Invalid API key or unauthorized access.", e);
             } else {
                 throw new ExternalApiException("Received HTTP error " + e.getStatusCode() + " from external service.", e);
             }
