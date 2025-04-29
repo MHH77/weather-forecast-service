@@ -63,7 +63,8 @@ Before you begin, ensure you have the following installed:
     openweathermap.api.units=metric    # Cache Configuration (Using Caffeine)
     spring.cache.cache-names=weatherCache
     spring.cache.caffeine.spec=maximumSize=500,expireAfterWrite=10m
-    ```    *   Save the file.
+    ```
+    *   Save the file.
 
 3.  **Build the Project (Optional):**
     ```bash
