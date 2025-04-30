@@ -48,7 +48,7 @@ Before you begin, ensure you have the following installed:
 
 1.  **Clone the Repository:**
     ```bash
-    git clone [<YOUR_REPOSITORY_URL>](https://github.com/MHH77/weather-forecast-service.git)
+    git clone https://github.com/MHH77/weather-forecast-service.git
     cd weather-forecast-service
     ```
 
